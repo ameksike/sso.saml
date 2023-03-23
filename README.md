@@ -22,10 +22,10 @@ Single Sign On (SSO) solution based on SAML
     ```
     ```php
     $metadata['saml-my'] = array(
-    'AssertionConsumerService' => 'http://localhost:4004/saml/login/callback',
-    'SingleLogoutService' => false,
-    'entityid' => 'saml-poc',
-    'metadata-set' => 'saml20-sp-remote',
+        'AssertionConsumerService' => 'http://localhost:4004/saml/login/callback',
+        'SingleLogoutService' => false,
+        'entityid' => 'saml-poc',
+        'metadata-set' => 'saml20-sp-remote',
     );
     ```
     ```
