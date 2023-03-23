@@ -12,12 +12,11 @@ samlPassport.init(passport, samlService);
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(session(
-    {
-        resave: true,
-        saveUninitialized: true,
-        secret: 'this shit hits'
-    }));
+app.use(session({
+    resave: true,
+    saveUninitialized: true,
+    secret: 'this shit hits'
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use("/saml", require("./src/samlRoutes"));
