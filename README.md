@@ -21,6 +21,11 @@ Single Sign On (SSO) solution based on SAML
     vi metadata/saml20-sp-remote.php
     ```
     ```php
+    $metadata[getenv('SIMPLESAMLPHP_SP_ENTITY_ID')] = array(
+        'AssertionConsumerService' => getenv('SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE'),
+        'SingleLogoutService' => getenv('SIMPLESAMLPHP_SP_SINGLE_LOGOUT_SERVICE'),
+    );
+
     $metadata['saml-my'] = array(
         'AssertionConsumerService' => 'http://localhost:4004/saml/login/callback',
         'SingleLogoutService' => false,
