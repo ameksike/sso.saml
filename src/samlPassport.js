@@ -25,7 +25,9 @@ module.exports = {
                         .then(configuration => done(null, configuration))
                         .catch(error => done(error));
                     if (!service?.configure && req?.logout) {
-                        req.logout();
+                        req.logout(req.user, err => {
+                            if (err) return next(err);
+                        });
                     }
                 }
             },

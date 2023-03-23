@@ -45,3 +45,18 @@ for more information see: [Setup a single sign on saml](https://medium.com/disne
 * npm install
 * npm start
 * http://localhost:4004
+
+# Users 
+There are two static users configured in the IdP with the following data:
+```
+UID	Username	Password	Group	Email
+--------------------------------------------------------
+1	user1	    user1pass	group1	user1@example.com
+2	user2	    user2pass	group2	user2@example.com
+```
+And there is one admin:
+```
+Username	Password
+--------------------------------------------------------
+admin	    secret
+```
