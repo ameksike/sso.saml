@@ -19,7 +19,7 @@ $config = array(
     ),
     'example-userpass' => array(
         'exampleauth:UserPass',
-        'user1:password' => array_merge($tplUser, array(
+        'user1:user1pass' => array_merge($tplUser, array(
             'http://schemas.microsoft.com/identity/claims/objectidentifier' => 'f2d75402-e1ae-40fe-8cc9-98ca1ab9cd5e',
             'http://schemas.microsoft.com/identity/claims/displayname' => 'User1 Taro',
             'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress' => 'user1@example.com',
@@ -27,7 +27,7 @@ $config = array(
             'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname' => 'User1',
             'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name' => 'user1@example.com'
         )),
-        'user2:password' => array_merge($tplUser, array(
+        'user2:user2pass' => array_merge($tplUser, array(
             'http://schemas.microsoft.com/identity/claims/objectidentifier' => 'f2a94916-2fcb-4b68-9eb1-5436309006a3',
             'http://schemas.microsoft.com/identity/claims/displayname' => 'User2 Taro',
             'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress' => 'user2@example.com',
