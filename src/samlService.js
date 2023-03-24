@@ -12,8 +12,8 @@ class SamlService {
         console.log("configure", req.query.username);
         return Promise.resolve({
             issuer: 'saml-my',  // saml-poc
-            callbackUrl : 'http://localhost:4004/saml/login/callback',
-            logoutCallbackUrl: 'http://localhost:4004/saml/logout/callback',
+            callbackUrl : 'http://localhost:4004/saml/login',
+            logoutCallbackUrl: 'http://localhost:4004/saml/logout',
             entryPoint: 'http://localhost:8080/simplesaml/saml2/idp/SSOService.php',
 
             identifierFormat: null,
