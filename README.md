@@ -1,7 +1,7 @@
 # sso.saml
 Single Sign On (SSO) solution based on SAML
 
-# Set a local IdP based on Simplesaml
+# Set a local IdP based on Simplesaml: Option 1
 
 * docker pull kristophjunge/test-saml-idp
 
@@ -27,9 +27,9 @@ Single Sign On (SSO) solution based on SAML
     );
 
     $metadata['saml-my'] = array(
-        'AssertionConsumerService' => 'http://localhost:4004/saml/login/callback',
-        'SingleLogoutService' => false,
-        'entityid' => 'saml-poc',
+        'AssertionConsumerService' => 'http://localhost:4004/saml/login',
+        'SingleLogoutService' => 'http://localhost:4004/saml/logout',
+        'entityid' => 'saml-my',
         'metadata-set' => 'saml20-sp-remote',
     );
     ```
@@ -38,6 +38,15 @@ Single Sign On (SSO) solution based on SAML
     ```
 * http://localhost:8080/simplesaml/module.php/core/frontpage_federation.php
 * http://localhost:8080/simplesaml/module.php/core/show_metadata.php?entityid=saml-my&set=saml20-sp-remote
+
+
+# Set a local IdP based on Simplesaml: Option 2
+* ./cfg/authsources.php for users
+* ./cfg/saml20-sp-remote.php for SP
+* docker-composer up
+* docker-compose exec idp bash
+* cat metadata/saml20-sp-remote.php
+
 
 For more information see: [Setup a single sign on saml](https://medium.com/disney-streaming/setup-a-single-sign-on-saml-test-environment-with-docker-and-nodejs-c53fc1a984c9) or [Docker Test SAML 2.0 Identity Provider (IdP)](https://github.com/kenchan0130/docker-simplesamlphp)
 
