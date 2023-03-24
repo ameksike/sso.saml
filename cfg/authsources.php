@@ -19,13 +19,21 @@ $config = array(
     ),
     'example-userpass' => array(
         'exampleauth:UserPass',
+        'user0:user0pass' => array_merge($tplUser, array(
+            'uid' => 'f2d75402-e1ae-40fe-8cc9-98ca1ab9cd5e',
+            'cn' => 'User0 Tester',
+            'email' => 'user0@example.com',
+            'givenName' => 'Tester',
+            'surname' => 'User0',
+            'sn' => 'user0@example.com'
+        )),
         'user1:user1pass' => array_merge($tplUser, array(
-            'http://schemas.microsoft.com/identity/claims/objectidentifier' => 'f2d75402-e1ae-40fe-8cc9-98ca1ab9cd5e',
-            'http://schemas.microsoft.com/identity/claims/displayname' => 'User1 Taro',
-            'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress' => 'user1@example.com',
-            'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname' => 'Taro',
-            'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname' => 'User1',
-            'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name' => 'user1@example.com'
+            'uid' => 'f2d75402-e1ae-40fe-8cc9-98ca1ab9cd5e',
+            'cn' => 'User1 Taro',
+            'email' => 'user1@example.com',
+            'givenName' => 'Taro',
+            'surname' => 'User1',
+            'sn' => 'user1@example.com'
         )),
         'user2:user2pass' => array_merge($tplUser, array(
             'http://schemas.microsoft.com/identity/claims/objectidentifier' => 'f2a94916-2fcb-4b68-9eb1-5436309006a3',
