@@ -8,9 +8,9 @@ router.post(
     function (req, res) {
         if (req.session) {
             let prevSession = req.session;
-            req.session.regenerate((err) => {  // Compliant
+            req.session.regenerate((err) => {
                 Object.assign(req.session, prevSession);
-                res.redirect('/');
+                res.redirect(samlDriver.service.getConfig().redirectUri);
             });
         } else {
             res.send('Log in Callback Success');
@@ -22,14 +22,14 @@ router.get(
     "/login",
     samlDriver.authenticate(),
     function (_req, res) {
-        res.redirect("/user/profile");
+        res.redirect(samlDriver.service.getConfig().redirectUri);
     }
 );
 
 router.get('/logout', function (req, res) {
     req.logout(req.user, err => {
         if (err) return next(err);
-        res.redirect("/");
+        res.redirect(samlDriver.service.getConfig().redirectUri);
     });
 });
 

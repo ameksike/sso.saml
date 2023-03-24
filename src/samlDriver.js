@@ -42,9 +42,6 @@ class SamlDriver extends BaseService {
                 this.service?.identify && this.service.identify(profile)
                     .then(user => done(null, user))
                     .catch(error => done(error));
-            },
-            (req, profile, done) => {
-                console.log("logout", profile);
             }
         );
         this.passport.use(this.id, this.strategy);

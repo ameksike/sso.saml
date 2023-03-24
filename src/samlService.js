@@ -9,8 +9,18 @@ class SamlService {
         console.log("deserializeUser", user);
     }
 
+    getConfig(req) {
+        const options = (req?.query?.username && config[req.query.username]) || config["default"];
+        return options;
+    }
+
+    setConfig(options, req) {
+        const config = this.getConfig(req);
+        Object.assign(config, options || {});
+    }
+
     configure(req) {
-        const options = (req.query.username && config[req.query.username]) || config["default"];
+        const options = this.getConfig(req);
         const payload = {
             ...options,
             identifierFormat: null,
