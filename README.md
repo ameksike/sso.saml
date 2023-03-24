@@ -39,7 +39,7 @@ Single Sign On (SSO) solution based on SAML
 * http://localhost:8080/simplesaml/module.php/core/frontpage_federation.php
 * http://localhost:8080/simplesaml/module.php/core/show_metadata.php?entityid=saml-my&set=saml20-sp-remote
 
-for more information see: [Setup a single sign on saml](https://medium.com/disney-streaming/setup-a-single-sign-on-saml-test-environment-with-docker-and-nodejs-c53fc1a984c9)
+For more information see: [Setup a single sign on saml](https://medium.com/disney-streaming/setup-a-single-sign-on-saml-test-environment-with-docker-and-nodejs-c53fc1a984c9) or [Docker Test SAML 2.0 Identity Provider (IdP)](https://github.com/kenchan0130/docker-simplesamlphp)
 
 # Run app
 * npm install
