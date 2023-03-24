@@ -1,3 +1,4 @@
+const config = require('../cfg/idp.metadata');
 class SamlService {
 
     serializeUser(user) {
@@ -9,21 +10,18 @@ class SamlService {
     }
 
     configure(req) {
-        console.log("configure", req.query.username);
-        return Promise.resolve({
-            issuer: 'saml-my',  // saml-poc
-            callbackUrl : 'http://localhost:4004/saml/login',
-            logoutCallbackUrl: 'http://localhost:4004/saml/logout',
-            entryPoint: 'http://localhost:8080/simplesaml/saml2/idp/SSOService.php',
-
+        const options = (req.query.username && config[req.query.username]) || config["default"];
+        const payload = {
+            ...options,
             identifierFormat: null,
             validateInResponseTo: false,
             disableRequestedAuthnContext: false,
-            
-            cert: require("fs").readFileSync(__dirname + '/../certs/idp.crt', 'utf8'),
+
+            cert: require("fs").readFileSync(options.certFile, 'utf8'),
             privateKey: require("fs").readFileSync(__dirname + '/../certs/key.pem', 'utf8'),
             decryptionPvk: require("fs").readFileSync(__dirname + '/../certs/key.pem', 'utf8')
-        });
+        };
+        return Promise.resolve(payload);
     }
 
     identify(profile) {
