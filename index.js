@@ -1,5 +1,10 @@
 const app = require("./src/app");
 
-const server = app.listen(4004, function () {
-    console.log('SERVER UP! >> %d', server.address().port)
+const server = app.listen(process?.env?.PORT || 4004, function () {
+    const inf = server.address();
+    console.log(
+        'SERVER UP! >> %s:%d',
+        inf.address === "::" ? "localhost" : inf.address,
+        inf.port
+    );
 });
