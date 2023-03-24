@@ -1,4 +1,4 @@
-class BaseService {
+class DIService {
 
     /**
      * @description Allow setting a list of dependencies where index is the dependency name
@@ -35,4 +35,4 @@ class BaseService {
     }
 }
 
-module.exports = BaseService;
+module.exports = DIService;

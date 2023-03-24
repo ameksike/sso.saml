@@ -2,9 +2,9 @@
  * http://www.passportjs.org/packages/passport-saml/
  */
 const { MultiSamlStrategy } = require('passport-saml');
-const BaseService = require("./base.service");
+const DIService = require("./di.service");
 
-class SamlDriver extends BaseService {
+class SamlDriver extends DIService {
     constructor() {
         super();
         this.id = "saml";
