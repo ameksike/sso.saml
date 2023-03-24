@@ -11,6 +11,7 @@ class SamlDriver extends BaseService {
     }
 
     initialize() {
+        this.passport = this.passport || require('passport');
         this.passport.serializeUser((user, done) => {
             if (!this.service?.serializeUser || !this.service.serializeUser(user, done)) {
                 done(null, user);
