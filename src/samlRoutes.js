@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const passport = require('passport');
+const samlDriver = require("./samlDriver");
 
 router.post(
     '/login',
-    passport.authenticate('saml', { failureRedirect: '/saml/login' }),
+    samlDriver.authenticate(),
     function (req, res) {
         if (req.session) {
             let prevSession = req.session;
@@ -20,11 +20,7 @@ router.post(
 
 router.get(
     "/login",
-    passport.authenticate("saml", {
-        additionalParams: { username: "user@domain.com" },
-        failureRedirect: '/saml/login',
-        failureFlash: true
-    }),
+    samlDriver.authenticate(),
     function (_req, res) {
         res.redirect("/user/profile");
     }
@@ -39,12 +35,7 @@ router.get('/logout', function (req, res) {
 
 router.get('/metadata', function (req, res) {
     res.type('application/xml');
-    res.status(200).send("SS"
-        /*samlStrategy.generateServiceProviderMetadata(
-            fs.readFileSync(__dirname + '/certs/cert.pem', 'utf8'),
-            fs.readFileSync(__dirname + '/certs/cert.pem', 'utf8')
-        )*/
-    );
+    res.status(200).send(samlDriver.metadata());
 });
 
 module.exports = router;
