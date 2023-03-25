@@ -10,26 +10,30 @@ class SamlService {
     }
 
     getConfig(req) {
-        const options = (req?.query?.username && config[req.query.username]) || config["default"];
-        return options;
+        const cfg = {};
+        cfg.options = (req?.query?.username && config[req.query.username]) || config["default"];
+        cfg.path = __dirname + '/../';
+        cfg.key = {};
+        cfg.key.sp = require("fs").readFileSync(cfg.path + '/certs/key.pem', 'utf8');
+        cfg.key.idp = require("fs").readFileSync(cfg.options.certFile, 'utf8');
+        return cfg;
     }
 
     setConfig(options, req) {
-        const config = this.getConfig(req);
-        Object.assign(config, options || {});
+        const cfg = this.getConfig(req);
+        Object.assign(cfg.options, options || {});
     }
 
     configure(req) {
-        const options = this.getConfig(req);
+        const cfg = this.getConfig(req);
         const payload = {
-            ...options,
+            ...cfg.options,
             identifierFormat: null,
             validateInResponseTo: false,
             disableRequestedAuthnContext: false,
-
-            cert: require("fs").readFileSync(options.certFile, 'utf8'),
-            privateKey: require("fs").readFileSync(__dirname + '/../certs/key.pem', 'utf8'),
-            decryptionPvk: require("fs").readFileSync(__dirname + '/../certs/key.pem', 'utf8')
+            cert: cfg.key.idp,
+            privateKey: cfg.key.sp,
+            decryptionPvk: cfg.key.sp
         };
         return Promise.resolve(payload);
     }
@@ -47,5 +51,4 @@ class SamlService {
 
 const obj = new SamlService();
 obj.Cls = SamlService;
-
 module.exports = obj;

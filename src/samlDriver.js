@@ -59,11 +59,22 @@ class SamlDriver extends DIService {
         });
     }
 
-    metadata() {
-        return this.strategy.generateServiceProviderMetadata(
-            fs.readFileSync(__dirname + '/../certs/cert.pem', 'utf8'),
-            fs.readFileSync(__dirname + '/../certs/cert.pem', 'utf8')
-        );
+    metadata(req) {
+        return new Promise((resolve, reject) => {
+            const config = this.service.getConfig();
+            this.strategy.generateServiceProviderMetadata(
+                req,
+                config.key.idp,
+                config.key.idp,
+                (error, result) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(result);
+                    }
+                }
+            )
+        });
     }
 }
 
