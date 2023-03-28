@@ -45,7 +45,7 @@ router.get("/authorize", (req, res, next) => {
 });
 
 router.post('/token', (req, res) => {
-    // OAuth Step 2
+    // OAuth Step 3
     res.json({
         access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IkFudG9uaW8uTWVtYnJpZGVzQHNpdGEuYWVybyIsInVzZXIiOjI1NTIzNCwiZGV2aWNlIjo1MDM4MDcsImlhdCI6MTY3OTMxNzgxNSwiZXhwIjoxNjc5NzQ5ODE1fQ.CrtcVc0P8OyPPTtVjEljo-ZjKtP8WZkCN4FIrfj98h4",
         refresh_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IkFudG9uaW8uTWVtYnJpZGVzQHNpdGEuYWVybyIsInVzZXIiOjI1NTIzNCwiZGV2aWNlIjo1MDM4MDcsImlhdCI6MTY3OTMxNzgxNSwiZXhwIjoxNjc5NzQ5ODE1fQ.CrtcVc0P8OyPPTtVjEljo-ZjKtP8WZkCN4FIrfj98h4",
