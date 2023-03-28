@@ -54,8 +54,7 @@ class SamlDriver extends DIService {
 
     authenticate(params) {
         return this.passport.authenticate(this.id, {
-            additionalParams: params || {},
-            failureRedirect: '/saml/login'
+            additionalParams: params || {}
         });
     }
 

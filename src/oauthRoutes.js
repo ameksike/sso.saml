@@ -2,11 +2,23 @@ const express = require("express");
 const router = express.Router();
 const samlDriver = require("./samlDriver");
 
-router.post('/authorize', (req, res) => {
+router.post('/authorize', samlDriver.authenticate(), (req, res) => {
     // OAuth Step 2
     const payload = { ...req.body, ...req.query, ...req.fields };
-    const oauth = samlDriver.service.getConfig().oauth;
-    res.redirect(oauth.redirectUri + "?code=12345");
+    
+    req.query.domain = req.session?.passport?.user?.domain;
+    const oauth = samlDriver.service.getConfig(req).options.oauth;
+    console.log(req.session.passport.user);
+    if (req.session) {
+        let prevSession = req.session;
+        req.session.regenerate((err) => {
+            Object.assign(req.session, prevSession);        
+            const cfg = samlDriver.service.getConfig();
+            res.redirect(oauth?.redirectUri + "?code=12345");
+        });
+    } else {
+        res.send('Log in Callback Success');
+    }
 });
 
 
@@ -24,12 +36,12 @@ router.get("/authorize", (req, res, next) => {
         scope: payload.scope, // 'ALLOW_GET_PROFILE_DATA'
         state: payload.state,
     };
-    samlDriver.service.setConfig({ redirectUri: payload.redirect_uri, oauth });
-
+    req.query.domain = "saml-my2";
+    samlDriver.service.setConfig({ redirectUri: payload.redirect_uri, oauth }, req);
     if (req.isAuthenticated && req.isAuthenticated()) {
-        res.redirect(oauth.redirectUri + "?code=12345" || "/user/profile");
+        res.redirect(oauth.redirectUri + "?code=12345");
     } else {
-        samlDriver.authenticate()(req, res, next);
+        samlDriver.authenticate({ domain: "oauth", code: 11111 })(req, res, next);
     }
 });
 
@@ -41,6 +53,14 @@ router.post('/token', (req, res) => {
         token_type: "Bearer",
         expires_in: "1311281970",
         scope: "ABCD"
+    });
+});
+
+router.get('/revoke', function (req, res) {
+    req.logout(req.user, err => {
+        if (err) return next(err);
+        const cfg = samlDriver.service.getConfig();
+        res.redirect(cfg.options.redirectUri);
     });
 });
 

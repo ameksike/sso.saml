@@ -18,8 +18,8 @@ $metadata[getenv('SIMPLESAMLPHP_SP_ENTITY_ID')] = array(
 );
 
 $metadata['saml-my2'] = array(
-    'AssertionConsumerService' => 'http://localhost:4004/saml/login',
-    'SingleLogoutService' => 'http://localhost:4004/saml/logout',
+    'AssertionConsumerService' => 'http://localhost:4004/oauth/authorize',
+    'SingleLogoutService' => 'http://localhost:4004/oauth/revoke',
     'entityid' => 'saml-my',
     'metadata-set' => 'saml20-sp-remote',
 );

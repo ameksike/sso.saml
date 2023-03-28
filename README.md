@@ -43,7 +43,7 @@ Single Sign On (SSO) solution based on SAML
 # Set a local IdP based on Simplesaml: Option 2
 * ./cfg/authsources.php for users
 * ./cfg/saml20-sp-remote.php for SP
-* docker-composer up
+* docker-compose up
 * docker-compose exec idp bash
 * cat metadata/saml20-sp-remote.php
 
