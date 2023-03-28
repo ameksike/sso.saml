@@ -5,15 +5,14 @@ const samlDriver = require("./samlDriver");
 router.post('/authorize', samlDriver.authenticate(), (req, res) => {
     // OAuth Step 2
     const payload = { ...req.body, ...req.query, ...req.fields };
-    
-    req.query.domain = req.session?.passport?.user?.domain;
+
+    req.body.RelayState = payload.RelayState || req?.user?.domain || req.session?.passport?.user?.domain;
     const oauth = samlDriver.service.getConfig(req).options.oauth;
-    console.log(req.session.passport.user);
+
     if (req.session) {
         let prevSession = req.session;
         req.session.regenerate((err) => {
-            Object.assign(req.session, prevSession);        
-            const cfg = samlDriver.service.getConfig();
+            Object.assign(req.session, prevSession);
             res.redirect(oauth?.redirectUri + "?code=12345");
         });
     } else {
@@ -36,12 +35,12 @@ router.get("/authorize", (req, res, next) => {
         scope: payload.scope, // 'ALLOW_GET_PROFILE_DATA'
         state: payload.state,
     };
-    req.query.domain = "saml-my2";
+    req.body.RelayState = "saml-my2";
     samlDriver.service.setConfig({ redirectUri: payload.redirect_uri, oauth }, req);
     if (req.isAuthenticated && req.isAuthenticated()) {
         res.redirect(oauth.redirectUri + "?code=12345");
     } else {
-        samlDriver.authenticate({ domain: "oauth", code: 11111 })(req, res, next);
+        samlDriver.authenticate({ RelayState: req.body.RelayState })(req, res, next);
     }
 });
 

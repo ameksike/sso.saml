@@ -11,7 +11,7 @@ class SamlService {
 
     getConfig(req) {
         const cfg = {};
-        cfg.options = (req?.query?.domain && config[req.query.domain]) || config["default"];
+        cfg.options = (req?.body?.RelayState && config[req.body.RelayState]) || config["default"];
         cfg.path = __dirname + '/../';
         cfg.key = {};
         cfg.key.sp = require("fs").readFileSync(cfg.path + '/certs/key.pem', 'utf8');
@@ -45,7 +45,7 @@ class SamlService {
             displayName: profile.cn,
             firstName: profile.givenName,
             lastName: profile.sn,
-            domain: profile.spNameQualifier
+            domain: profile.spNameQualifier || profile.NameQualifier
         });
     }
 }
