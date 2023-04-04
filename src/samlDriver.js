@@ -63,8 +63,8 @@ class SamlDriver extends DIService {
             const config = this.service.getConfig();
             this.strategy.generateServiceProviderMetadata(
                 req,
-                config.key.idp,
-                config.key.idp,
+                config.key.sp,
+                config.key.sp,
                 (error, result) => {
                     if (error) {
                         reject(error);
