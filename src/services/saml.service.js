@@ -1,4 +1,4 @@
-const config = require('../cfg/idp.metadata');
+const config = {};
 class SamlService {
 
     serializeUser(user) {
