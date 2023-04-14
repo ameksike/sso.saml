@@ -76,3 +76,5 @@ admin	    secret
 - [Overview of SAML](https://developers.onelogin.com/saml)
 - [SSO - SAML Authentication](https://medium.com/brightlab-techblog/single-sign-on-sso-saml-authentication-explained-1e463b9168cb)
 - [HTTP Authorization](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
+- [Passport SAML](http://www.passportjs.org/packages/passport-saml/)
+- [SAML Test Tool](https://samltest.id/)
