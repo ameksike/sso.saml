@@ -69,3 +69,9 @@ Username	Password
 --------------------------------------------------------
 admin	    secret
 ```
+
+# Docs
+- [Internet Engineering Task Force (IETF)](https://datatracker.ietf.org/doc/html/rfc6750)
+- [OAuth 2.0 Framework - RFC 6749](https://oauth.net/2/)
+- [Overview of SAML](https://developers.onelogin.com/saml)
+- [SSO - SAML Authentication](https://medium.com/brightlab-techblog/single-sign-on-sso-saml-authentication-explained-1e463b9168cb)
