@@ -8,32 +8,36 @@
 
 class LDB {
 
-    #path = "";
-    #schema = "db";
-    #name = "data";
-    #key = "id";
-    #ext = "json";
-    #format = "json";
-    #encoding = "utf8";
-    #db = null;
-    #mode = "cache";
-    #logger = console;
-    #busy = null;
-    #link = {};
+    #model = {}
+    #driver = {} 
 
     get name() {
-        return this.#name;
+        return this.#model.name;
     }
 
     get key() {
-        return this.#key;
+        return this.#model.key;
     }
 
     get src() {
-        return this.path.join(this.#path, this.#schema + "." + this.#name + "." + this.#ext);
+        return this.path.join(this.#driver.path, this.#model.schema + "." + this.#model.name + "." + this.#driver.ext);
     }
 
     constructor(options) {
+
+        this.#model.schema = "db";
+        this.#model.name = "data";
+        this.#model.key = "id";
+        this.#model.link = {};
+        
+        this.#driver.path = "";
+        this.#driver.ext = "json";
+        this.#driver.format = "json";
+        this.#driver.encoding = "utf8";
+        this.#driver.db = null;
+        this.#driver.mode = "cache";
+        this.#driver.busy = null;
+
         this.configure(options);
         this.cryp = require("./cryp");
         this.fs = require("fs").promises;
@@ -41,21 +45,24 @@ class LDB {
     }
 
     configure(options) {
+        if (!options) {
+            return this;
+        }
         // model config
-        this.#path = options.path || this.#path;
-        this.#schema = options.schema || this.#schema;
-        this.#name = options.name || this.#name;
-        this.#key = options.key || this.#key;
-        // system config
-        this.#ext = options.ext || this.#ext;
-        this.#format = options.encoder || this.#format;
-        this.#encoding = options.encoding || this.#encoding;
-        this.#db = options.db || this.#db;
-        this.#mode = options.mode || this.#mode;
-        this.#logger = options.logger || this.#logger;
-        this.#busy = options.busy || this.#busy;
-        // links
-        this.#link = options.link || this.#link;
+        this.#model.schema = options.model?.schema || this.#model.schema;
+        this.#model.name = options.model?.name || this.#model.name;
+        this.#model.key = options.model?.key || this.#model.key;
+        this.#model.link = options.model?.link || this.#model.link;
+        // driver config
+        this.#driver.path = options.driver?.path || this.#driver.path;
+        this.#driver.ext = options.driver?.ext || this.#driver.ext;
+        this.#driver.format = options.driver?.encoder || this.#driver.format;
+        this.#driver.encoding = options.driver?.encoding || this.#driver.encoding;
+        this.#driver.db = options.driver?.db || this.#driver.db;
+        this.#driver.mode = options.driver?.mode || this.#driver.mode;
+        this.#driver.busy = options.driver?.busy || this.#driver.busy;
+        this.#driver.logger = options.driver?.logger || this.#driver.logger;
+        return this;
     }
 
     async select(query) {
@@ -106,7 +113,7 @@ class LDB {
 
     #getDep(item) {
         const name = typeof (item.model) === "string" ? item.model : item.model.name;
-        const rel = this.#link[name];
+        const rel = this.#model.link[name];
         const model = (typeof (item.model) === "string" && rel?.model) || item.model;
         const foreignKey = item.foreignKey || rel?.foreignKey;
         const type = item.type || rel?.type;
@@ -123,7 +130,7 @@ class LDB {
             const dep = this.#getDep(item);
             item.where = dep.type === "OneToMany"
                 ? (item) => item[dep.foreignKey] === row[this.key]
-                : (!row[dep.foreignKey] ? null : { [dep.model.key] : row[dep.foreignKey] });
+                : (!row[dep.foreignKey] ? null : { [dep.model.key]: row[dep.foreignKey] });
             return item.where && dep.model.select && dep.model.select(item);
         }));
 
@@ -151,17 +158,17 @@ class LDB {
             return null;
         }
         catch (error) {
-            this.#logger?.log({
+            this.#log({
                 src: "LDB:delete",
                 data: {
                     row,
-                    path: this.#path,
-                    name: this.#name,
-                    key: this.#key,
+                    path: this.#driver.path,
+                    name: this.#model.name,
+                    key: this.#model.key,
                 },
                 error
             });
-            this.#busy = false;
+            this.#driver.busy = false;
             return null;
         }
     }
@@ -185,23 +192,23 @@ class LDB {
     async save(row) {
         try {
             const db = await this.#read();
-            row[this.#key] = this.#uid(row);
-            db[row[this.#key]] = row;
+            row[this.#model.key] = this.#uid(row);
+            db[row[this.#model.key]] = row;
             await this.#write(db);
             return row;
         }
         catch (error) {
-            this.#logger?.log({
+            this.#log({
                 src: "LDB:write",
                 data: {
                     row,
-                    path: this.#path,
-                    name: this.#name,
-                    key: this.#key,
+                    path: this.#driver.path,
+                    name: this.#model.name,
+                    key: this.#model.key,
                 },
                 error
             });
-            this.#busy = false;
+            this.#driver.busy = false;
             return null;
         }
     }
@@ -211,30 +218,30 @@ class LDB {
             return null;
         }
         try {
-            if (!this.#db || (this.#db && this.#mode !== "cache")) {
+            if (!this.#driver.db || (this.#driver.db && this.#driver.mode !== "cache")) {
                 const file = this.src;
-                this.#busy = true;
-                const tmp = await this.fs.readFile(file, this.#encoding);
-                const db = this.cryp.decode(tmp, this.#format);
-                this.#busy = false;
-                this.#logger?.log({ src: "LDB:read", file, mode: this.#mode });
-                if (this.#mode === "cache") {
-                    this.#db = db;
+                this.#driver.busy = true;
+                const tmp = await this.fs.readFile(file, this.#driver.encoding);
+                const db = this.cryp.decode(tmp, this.#driver.format);
+                this.#driver.busy = false;
+                this.#log({ src: "LDB:read", file, mode: this.#driver.mode });
+                if (this.#driver.mode === "cache") {
+                    this.#driver.db = db;
                 }
             }
-            return this.#db;
+            return this.#driver.db;
         }
         catch (error) {
-            this.#logger?.log({
+            this.#log({
                 src: "LDB:read",
                 data: {
-                    path: this.#path,
-                    name: this.#name,
-                    key: this.#key,
+                    path: this.#driver.path,
+                    name: this.#model.name,
+                    key: this.#model.key,
                 },
                 error
             });
-            this.#busy = false;
+            this.#driver.busy = false;
             return {};
         }
     }
@@ -244,24 +251,24 @@ class LDB {
             return null;
         }
         try {
-            const content = this.cryp.encode(db, this.#format);
+            const content = this.cryp.encode(db, this.#driver.format);
             const file = this.src;
-            this.#busy = true;
+            this.#driver.busy = true;
             await this.fs.writeFile(file, content);
-            this.#busy = false;
-            this.#logger?.log({ src: "LDB:write", file, mode: this.#mode });
-            if (this.#mode === "cache") {
-                this.#db = db;
+            this.#driver.busy = false;
+            this.#log({ src: "LDB:write", file, mode: this.#driver.mode });
+            if (this.#driver.mode === "cache") {
+                this.#driver.db = db;
             }
-            return this.#db;
+            return this.#driver.db;
         }
         catch (error) {
-            this.#logger?.log({
+            this.#log({
                 src: "LDB:write",
                 data: {
-                    path: this.#path,
-                    name: this.#name,
-                    key: this.#key,
+                    path: this.#driver.path,
+                    name: this.#model.name,
+                    key: this.#model.key,
                 },
                 error
             });
@@ -276,7 +283,7 @@ class LDB {
         if (typeof (row) !== "object") {
             return auto && this.#gen();
         }
-        return (row && row[this.#key]) || (auto && this.#gen());
+        return (row && row[this.#model.key]) || (auto && this.#gen());
     }
 
     #isUid(row) {
@@ -287,23 +294,35 @@ class LDB {
         return String(Date.now()) + String(Math.floor(Math.random() * 100) + 11).slice(-2);
     }
 
+    #log(info) {
+        if (!this.#driver.logger) {
+            return;
+        }
+        if (this.#driver.logger?.log) {
+            return this.#driver.logger.log(info);
+        }
+        if (typeof this.#driver.logger === "function") {
+            return this.#driver.logger(info);
+        }
+    }
+
     isBusy() {
-        if (this.#busy) {
-            this.#logger.log({
+        if (this.#driver.busy) {
+            this.#log({
                 src: "LDB:isBusy",
                 data: {
-                    path: this.#path,
-                    name: this.#name,
-                    key: this.#key,
+                    path: this.#driver.path,
+                    name: this.#model.name,
+                    key: this.#model.key,
                 },
                 error: "busy resource"
             });
         }
-        return this.#busy;
+        return this.#driver.busy;
     }
 
     has(option) {
-        this.#link[option?.model?.name || "default"] = {
+        this.#model.link[option?.model?.name || "default"] = {
             model: option?.model,
             foreignKey: option.foreignKey,
             type: option.type || "OneToOne",
