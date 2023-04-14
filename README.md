@@ -75,3 +75,4 @@ admin	    secret
 - [OAuth 2.0 Framework - RFC 6749](https://oauth.net/2/)
 - [Overview of SAML](https://developers.onelogin.com/saml)
 - [SSO - SAML Authentication](https://medium.com/brightlab-techblog/single-sign-on-sso-saml-authentication-explained-1e463b9168cb)
+- [HTTP Authorization](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Authorization)
